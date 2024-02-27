@@ -1,6 +1,7 @@
 package br.com.aei.api.services.impl;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class UsersServiceImpl implements UsersService{
         Optional<Users> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
     }
+
+    public List<Users> findAll() {
+        return repository.findAll();
+    }   
     
 }
