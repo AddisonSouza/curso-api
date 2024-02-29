@@ -1,9 +1,10 @@
 package br.com.aei.api.services.impl;
 
+import org.h2.command.dml.MergeUsing.When;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mock; 
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,10 +18,12 @@ import java.util.Optional;
 import br.com.aei.api.domain.Users;
 import br.com.aei.api.domain.dto.UsersDTO;
 import br.com.aei.api.repositories.UsersRepository;
+import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 public class UsersServiceImplTest {
 
+    private static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
     private static final String PASSWORD = "123";
     private static final String EMAIL    = "valdir@email.com";
     private static final String NAME     = "valdir";
@@ -56,6 +59,18 @@ public class UsersServiceImplTest {
         assertEquals(ID, response.getId());
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFoundException() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
+
+        try{
+            service.findById(ID);
+        } catch (Exception ex){
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+        }
     }
 
     @Test
