@@ -1,7 +1,5 @@
 package br.com.aei.api.services.impl;
 
-import org.h2.command.dml.MergeUsing.When;
-import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -28,6 +29,7 @@ import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 @SpringBootTest
 public class UsersServiceImplTest {
 
+    private static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
     private static final int INDEX = 0;
     private static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
     private static final String PASSWORD = "123";
@@ -94,7 +96,7 @@ public class UsersServiceImplTest {
     }
 
     @Test
-    void whenCreateReturnSuccess() {
+    void whenCreateThenReturnSuccess() {
         when(repository.save(any())).thenReturn(users);
 
         Users response = service.create(usersDTO);
@@ -108,7 +110,7 @@ public class UsersServiceImplTest {
     }
 
     @Test
-    void whenCreateReturnDateIntegrityViolationException() {
+    void whenCreateThenReturnDateIntegrityViolationException() {
         when(repository.findByEmail(anyString())).thenReturn(optionalUser);
 
         try{
@@ -116,12 +118,12 @@ public class UsersServiceImplTest {
             service.create(usersDTO);
         } catch (Exception ex) {
             assertEquals(DataIntegratyViolationException.class, ex.getClass());
-            assertEquals("E-mail já cadastrado no sistema", ex.getMessage());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
         }
     }
 
    @Test
-    void whenUpdateReturnSuccess() {
+    void whenUpdateThenReturnSuccess() {
         when(repository.save(any())).thenReturn(users);
 
         Users response = service.update(usersDTO);
@@ -134,10 +136,27 @@ public class UsersServiceImplTest {
         assertEquals(PASSWORD, response.getPassword());
     }
 
-    @Test
-    void testUpdate() {
+   @Test
+    void whenUpdateThenReturnDateIntegrityViolationException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
 
+        try{
+            optionalUser.get().setId(2);
+            service.create(usersDTO);
+        } catch (Exception ex) {
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
+        }
     }
+
+    @Test
+    void deleteWithSuccess(){
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        doNothing().when((repository)).deleteById(anyInt());
+        service.delete(ID);
+        verify(repository, times(1)).deleteById(anyInt());
+    }
+
 
     private void startUser() {
         users = new Users(ID, NAME, EMAIL, PASSWORD);
