@@ -15,6 +15,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.List;
 import br.com.aei.api.domain.Users;
 import br.com.aei.api.domain.dto.UsersDTO;
 import br.com.aei.api.repositories.UsersRepository;
@@ -23,6 +24,7 @@ import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 @SpringBootTest
 public class UsersServiceImplTest {
 
+    private static final int INDEX = 0;
     private static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
     private static final String PASSWORD = "123";
     private static final String EMAIL    = "valdir@email.com";
@@ -74,17 +76,26 @@ public class UsersServiceImplTest {
     }
 
     @Test
+    void whenFindAllThenReturnAnListOfUsers() {
+        when(repository.findAll()).thenReturn(List.of(users));
+
+        List<Users> response = service.findAll();
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(Users.class, response.get(INDEX).getClass());
+        assertEquals(ID, response.get(INDEX).getId());
+        assertEquals(NAME, response.get(INDEX).getName());
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
+        assertEquals(PASSWORD, response.get(INDEX).getPassword());
+    }
+
+    @Test
     void testCreate() {
 
     }
 
     @Test
     void testDelete() {
-
-    }
-
-    @Test
-    void testFindAll() {
 
     }
 
