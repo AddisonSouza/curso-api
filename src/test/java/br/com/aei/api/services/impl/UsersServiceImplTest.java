@@ -1,6 +1,7 @@
 package br.com.aei.api.services.impl;
 
 import org.h2.command.dml.MergeUsing.When;
+import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -90,8 +92,17 @@ public class UsersServiceImplTest {
     }
 
     @Test
-    void testCreate() {
+    void whenCreateReturnSuccess() {
+        when(repository.save(any())).thenReturn(users);
 
+        Users response = service.create(usersDTO);
+        
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
