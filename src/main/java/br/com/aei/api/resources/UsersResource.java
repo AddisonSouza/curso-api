@@ -33,7 +33,6 @@ public class UsersResource {
 
     @GetMapping(value = ID)
     public ResponseEntity<UsersDTO> findById(@PathVariable Integer id) {
-
         return ResponseEntity.ok().body(mapper.map(service.findById(id), UsersDTO.class));
     }
 
