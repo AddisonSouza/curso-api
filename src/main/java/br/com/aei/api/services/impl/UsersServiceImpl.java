@@ -11,7 +11,7 @@ import br.com.aei.api.domain.Users;
 import br.com.aei.api.domain.dto.UsersDTO;
 import br.com.aei.api.repositories.UsersRepository;
 import br.com.aei.api.services.UsersService;
-import br.com.aei.api.services.exceptions.DataIntegratyViolationException;
+import br.com.aei.api.services.exceptions.DataIntegrityViolationException;
 import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -53,7 +53,7 @@ public class UsersServiceImpl implements UsersService{
     private void findByEmail(UsersDTO obj) {
         Optional<Users> users = repository.findByEmail(obj.getEmail());
         if(users.isPresent() && !users.get().getId().equals(obj.getId())) {
-            throw new DataIntegratyViolationException("E-mail já cadastrado no sistema!");
+            throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
         }
    
      }

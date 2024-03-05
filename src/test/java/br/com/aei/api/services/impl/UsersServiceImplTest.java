@@ -23,13 +23,13 @@ import java.util.List;
 import br.com.aei.api.domain.Users;
 import br.com.aei.api.domain.dto.UsersDTO;
 import br.com.aei.api.repositories.UsersRepository;
-import br.com.aei.api.services.exceptions.DataIntegratyViolationException;
+import br.com.aei.api.services.exceptions.DataIntegrityViolationException;
 import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 public class UsersServiceImplTest {
 
-    private static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
+    private static final String EMAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema!";
     private static final int INDEX = 0;
     private static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
     private static final String PASSWORD = "123";
@@ -117,8 +117,8 @@ public class UsersServiceImplTest {
            //   optionalUser.get().setId(2);
             service.create(usersDTO);
         } catch (Exception ex) {
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
-            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+            assertEquals(EMAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
         }
     }
 
@@ -144,8 +144,8 @@ public class UsersServiceImplTest {
             optionalUser.get().setId(2);
             service.create(usersDTO);
         } catch (Exception ex) {
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
-            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+            assertEquals(EMAIL_JA_CADASTRADO_NO_SISTEMA, ex.getMessage());
         }
     }
 
