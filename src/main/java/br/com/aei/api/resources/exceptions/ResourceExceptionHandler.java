@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.aei.api.services.exceptions.DataIntegratyViolationException;
+import br.com.aei.api.services.exceptions.DataIntegrityViolationException;
 import br.com.aei.api.services.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -22,8 +22,8 @@ public class ResourceExceptionHandler {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
     
-    @ExceptionHandler(DataIntegratyViolationException.class)
-        public ResponseEntity<StandartError>dataIntegratyViolationException(DataIntegratyViolationException ex, HttpServletRequest request) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+        public ResponseEntity<StandartError>dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
             StandartError error = 
                 new StandartError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
